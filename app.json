@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "Obsidian Calculator",
+    "slug": "obsidian-calculator",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#06080D",
+    "scheme": "obsidian-calc",
+    "splash": {
+      "backgroundColor": "#06080D"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.obsidian.calculator",
+      "backgroundColor": "#06080D"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#06080D"
+      },
+      "package": "com.obsidian.calculator",
+      "backgroundColor": "#06080D"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
