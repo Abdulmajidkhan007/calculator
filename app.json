@@ -4,10 +4,10 @@
     "slug": "obsidian-calculator",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "backgroundColor": "#06080D",
     "scheme": "obsidian-calc",
+    "newArchEnabled": true,
     "splash": {
       "backgroundColor": "#06080D"
     },
@@ -21,10 +21,12 @@
         "backgroundColor": "#06080D"
       },
       "package": "com.obsidian.calculator",
-      "backgroundColor": "#06080D"
+      "backgroundColor": "#06080D",
+      "softwareKeyboardLayoutMode": "pan"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-haptics"
     ],
     "experiments": {
       "typedRoutes": true

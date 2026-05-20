@@ -4,7 +4,6 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
-  runOnJS,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { Colors } from '../../theme/colors';
@@ -12,8 +11,6 @@ import { Colors } from '../../theme/colors';
 interface BackspaceButtonProps {
   onPress: () => void;
 }
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 function BackspaceButton({ onPress }: BackspaceButtonProps) {
   const scale = useSharedValue(1);
@@ -23,31 +20,29 @@ function BackspaceButton({ onPress }: BackspaceButtonProps) {
   }));
 
   const handlePressIn = useCallback(() => {
-    'worklet';
     scale.value = withSpring(0.82, { damping: 18, stiffness: 500 });
-  }, []);
+  }, [scale]);
 
   const handlePressOut = useCallback(() => {
-    'worklet';
     scale.value = withSpring(1, { damping: 14, stiffness: 280 });
-  }, []);
+  }, [scale]);
 
-  const fireHaptic = useCallback(() => {
+  const handlePress = useCallback(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onPress();
   }, [onPress]);
 
   return (
-    <AnimatedPressable
+    <Pressable
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
-      onPress={fireHaptic}
-      style={[styles.container, animStyle]}
+      onPress={handlePress}
       hitSlop={12}
     >
-      {/* Unicode backspace symbol ⌫ */}
-      <Text style={styles.icon}>⌫</Text>
-    </AnimatedPressable>
+      <Animated.View style={[styles.container, animStyle]}>
+        <Text style={styles.icon}>⌫</Text>
+      </Animated.View>
+    </Pressable>
   );
 }
 

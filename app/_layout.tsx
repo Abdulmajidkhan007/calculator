@@ -6,12 +6,12 @@ import { StyleSheet } from 'react-native';
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={styles.root}>
-      <StatusBar style="light" />
-      <Stack screenOptions={{ headerShown: false }} />
+      <StatusBar style="light" backgroundColor="transparent" translucent />
+      <Stack screenOptions={{ headerShown: false, animation: 'fade' }} />
     </GestureHandlerRootView>
   );
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1 },
+  root: { flex: 1, backgroundColor: '#06080D' },
 });

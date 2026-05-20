@@ -11,7 +11,6 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
   withTiming,
-  runOnJS,
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ButtonConfig, ButtonKind } from '../../types/calculator';
@@ -25,8 +24,6 @@ interface CalcButtonProps {
   onHaptic: (kind: ButtonKind) => void;
   isActiveOperator?: boolean;
 }
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 function CalcButton({ config, onPress, onHaptic, isActiveOperator = false }: CalcButtonProps) {
   const { label, value, kind } = config;
@@ -43,20 +40,18 @@ function CalcButton({ config, onPress, onHaptic, isActiveOperator = false }: Cal
   }));
 
   const handlePressIn = useCallback(() => {
-    'worklet';
     scale.value = withSpring(0.875, { damping: 18, stiffness: 500, mass: 0.6 });
     glow.value = withTiming(1, { duration: 80 });
-  }, []);
+  }, [scale, glow]);
 
   const handlePressOut = useCallback(() => {
-    'worklet';
     scale.value = withSpring(1, { damping: 14, stiffness: 280, mass: 0.7 });
     glow.value = withTiming(0, { duration: 200 });
-  }, []);
+  }, [scale, glow]);
 
   const handlePress = useCallback(() => {
-    runOnJS(onHaptic)(kind);
-    runOnJS(onPress)(value, kind);
+    onHaptic(kind);
+    onPress(value, kind);
   }, [onPress, onHaptic, value, kind]);
 
   const renderContent = () => {
@@ -81,13 +76,11 @@ function CalcButton({ config, onPress, onHaptic, isActiveOperator = false }: Cal
           styles.operatorInner,
           isActiveOperator && styles.operatorActive,
         ]}>
-          <Animated.View
-            style={[
-              styles.operatorGlow,
-              animatedGlow,
-              isActiveOperator && styles.operatorGlowActive,
-            ]}
-          />
+          <Animated.View style={[
+            styles.operatorGlow,
+            animatedGlow,
+            isActiveOperator && styles.operatorGlowActive,
+          ]} />
           <Text style={[
             styles.buttonText,
             styles.operatorText,
@@ -116,7 +109,6 @@ function CalcButton({ config, onPress, onHaptic, isActiveOperator = false }: Cal
       );
     }
 
-    // Number
     return (
       <View style={[styles.buttonInner, styles.numberInner]}>
         <Text style={styles.buttonText}>{label}</Text>
@@ -125,15 +117,16 @@ function CalcButton({ config, onPress, onHaptic, isActiveOperator = false }: Cal
   };
 
   return (
-    <AnimatedPressable
+    <Pressable
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       onPress={handlePress}
-      style={[styles.container, animatedContainer]}
       hitSlop={4}
     >
-      {renderContent()}
-    </AnimatedPressable>
+      <Animated.View style={[styles.container, animatedContainer]}>
+        {renderContent()}
+      </Animated.View>
+    </Pressable>
   );
 }
 

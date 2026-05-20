@@ -48,7 +48,7 @@ export default function CalculatorScreen() {
       {/* Background gradient */}
       <LinearGradient
         colors={[Colors.bg.primary, Colors.bg.secondary, '#070C16']}
-        style={StyleSheet.absoluteFillObject}
+        style={StyleSheet.absoluteFill}
         start={{ x: 0.2, y: 0 }}
         end={{ x: 0.8, y: 1 }}
       />

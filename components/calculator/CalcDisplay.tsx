@@ -39,12 +39,9 @@ export default function CalcDisplay({
 }: CalcDisplayProps) {
   const scrollRef = useRef<ScrollView>(null);
 
-  // Result animation: fade + subtle scale pop when result appears
-  const resultOpacity = useSharedValue(1);
   const resultScale = useSharedValue(1);
+  const resultOpacity = useSharedValue(1);
   const resultTranslateY = useSharedValue(0);
-
-  // Live preview fade
   const previewOpacity = useSharedValue(0);
 
   const prevDisplay = useRef(display);
@@ -52,7 +49,6 @@ export default function CalcDisplay({
   useEffect(() => {
     if (display !== prevDisplay.current) {
       if (justEvaluated) {
-        // Pop animation for the result
         resultScale.value = withSequence(
           withTiming(0.94, { duration: 60, easing: Easing.out(Easing.quad) }),
           withSpring(1, { damping: 10, stiffness: 300 })
@@ -66,7 +62,6 @@ export default function CalcDisplay({
           withSpring(0, { damping: 12, stiffness: 400 })
         );
       } else {
-        // Subtle flash on each digit
         resultOpacity.value = withSequence(
           withTiming(0.7, { duration: 40 }),
           withTiming(1, { duration: 80 })
@@ -74,7 +69,7 @@ export default function CalcDisplay({
       }
       prevDisplay.current = display;
     }
-  }, [display, justEvaluated]);
+  }, [display, justEvaluated, resultScale, resultOpacity, resultTranslateY]);
 
   useEffect(() => {
     if (liveResult) {
@@ -82,9 +77,8 @@ export default function CalcDisplay({
     } else {
       previewOpacity.value = withTiming(0, { duration: 120 });
     }
-  }, [liveResult]);
+  }, [liveResult, previewOpacity]);
 
-  // Auto-scroll expression to the right
   useEffect(() => {
     setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 50);
   }, [expression]);
@@ -104,22 +98,17 @@ export default function CalcDisplay({
   const displayFontSize = getDisplayFontSize(display, 76);
   const exprFontSize = getExpressionFontSize(expression, 20);
 
-  const displayColor = hasError
-    ? Colors.accent.red
-    : justEvaluated
-    ? Colors.text.primary
-    : Colors.text.primary;
+  const displayColor = hasError ? Colors.accent.red : Colors.text.primary;
 
   return (
     <View style={styles.wrapper}>
       <LinearGradient
         colors={['#0A0E18', '#070B12']}
-        style={styles.gradientBg}
+        style={StyleSheet.absoluteFill}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
       />
 
-      {/* Glassmorphism panel */}
       <View style={styles.glassPanel}>
         {Platform.OS === 'ios' ? (
           <BlurView intensity={18} tint="dark" style={StyleSheet.absoluteFill} />
@@ -127,7 +116,6 @@ export default function CalcDisplay({
           <View style={[StyleSheet.absoluteFill, styles.androidGlass]} />
         )}
 
-        {/* Top accent line */}
         <LinearGradient
           colors={['transparent', Colors.accent.cyan, 'transparent']}
           start={{ x: 0, y: 0.5 }}
@@ -136,7 +124,6 @@ export default function CalcDisplay({
         />
 
         <View style={styles.displayContent}>
-          {/* Expression row (scrollable) */}
           <View style={styles.expressionRow}>
             <ScrollView
               ref={scrollRef}
@@ -157,14 +144,12 @@ export default function CalcDisplay({
             </ScrollView>
           </View>
 
-          {/* Live preview (result estimate while typing) */}
           <Animated.View style={[styles.livePreviewRow, previewAnimStyle]}>
             <Text style={styles.livePreviewText} numberOfLines={1}>
               = {liveResult}
             </Text>
           </Animated.View>
 
-          {/* Main display number */}
           <Animated.View style={[styles.resultRow, resultAnimStyle]}>
             <Text
               style={[
@@ -182,7 +167,6 @@ export default function CalcDisplay({
         </View>
       </View>
 
-      {/* Bottom divider glow */}
       <LinearGradient
         colors={['transparent', 'rgba(0,212,184,0.12)', 'transparent']}
         start={{ x: 0, y: 0.5 }}
@@ -198,10 +182,6 @@ const styles = StyleSheet.create({
     height: DISPLAY_HEIGHT,
     position: 'relative',
     overflow: 'hidden',
-  },
-
-  gradientBg: {
-    ...StyleSheet.absoluteFillObject,
   },
 
   glassPanel: {
