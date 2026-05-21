@@ -7,7 +7,7 @@
     "userInterfaceStyle": "dark",
     "backgroundColor": "#06080D",
     "scheme": "obsidian-calc",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "splash": {
       "backgroundColor": "#06080D"
     },
@@ -22,7 +22,8 @@
       },
       "package": "com.obsidian.calculator",
       "backgroundColor": "#06080D",
-      "softwareKeyboardLayoutMode": "pan"
+      "softwareKeyboardLayoutMode": "pan",
+      "minSdkVersion": 24
     },
     "plugins": [
       "expo-router"
